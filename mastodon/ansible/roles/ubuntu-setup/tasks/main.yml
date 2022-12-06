@@ -1,0 +1,49 @@
+---
+# tasks file for ubuntu-setup
+- name: Check if Python is installed
+  ansible.builtin.raw: command -v python3
+  register: python_installed
+  ignore_errors: true
+  changed_when: python_installed.rc != 0
+- name: Check if apt is installed
+  ansible.builtin.raw: command -v apt
+  register: apt_installed
+  when: python_installed is failed
+  ignore_errors: true
+- name: Bootstrap Python on Ubuntu Linux
+  become: true
+  ansible.builtin.raw: apt update && apt install -y python3
+  when: python_installed is failed and apt_installed is succeeded
+- name: Update package manager cache before installing packages.
+  become: true
+  ansible.builtin.package:
+    update_cache: true
+- name: Install packages to setup node installation
+  become: true
+  ansible.builtin.package:
+    name: "{{ packagesinit | map(attribute='package') }}"
+    update_cache: false
+- name: Install Node 16
+  become: true
+  ansible.builtin.shell: |
+    set -o pipefail
+    curl -sL https://deb.nodesource.com/setup_16.x | bash -
+  args:
+    executable: /bin/bash
+  register: node_install
+  changed_when: node_install.rc != 0
+- name: Add Postgresql repository information
+  become: true
+  ansible.builtin.shell: |
+    wget -O /usr/share/keyrings/postgresql.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    echo "deb [signed-by=/usr/share/keyrings/postgresql.asc] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/postgresql.list
+  register: add_pgsql_key
+  changed_when: add_pgsql_key.rc != 0
+- name: Install all required packages
+  become: true
+  ansible.builtin.package:
+    name: "{{ packages | map(attribute='package') }}"
+    update_cache: false
+- name: All done!
+  ansible.builtin.debug:
+    msg: Packages have been successfully installed

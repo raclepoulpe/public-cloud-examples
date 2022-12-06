@@ -1,0 +1,37 @@
+- name: Playbook to install Mastodon
+  hosts: mastodon_server
+  vars_files:
+    - "group_vars/vars.yml"
+  tasks:
+    - name: Run ubuntu-setup role
+      ansible.builtin.include_role:
+        name: ubuntu-setup
+    - name: Create Mastodon user
+      become: true
+      ansible.builtin.user:
+        name: "{{ mastodon_user }}"
+        createhome: true
+        shell: /bin/bash
+        home: "{{ mastodon_home }}"
+    - name: Clone mastodon project
+      ansible.builtin.include_role:
+        name: mastodon-clone
+      args:
+        apply:
+          become: true
+          become_user: mastodon
+    - name: Install Ruby environment
+      ansible.builtin.include_role:
+        name: ruby
+      args:
+        apply:
+          become: true
+          become_user: mastodon
+    - name: Install last dependencies
+      ansible.builtin.include_role:
+        name: mastodon-last-dependencies
+      args:
+        apply:
+          become: true
+          become_user: mastodon
+          become_flags: -i

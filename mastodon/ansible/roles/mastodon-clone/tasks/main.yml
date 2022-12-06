@@ -1,0 +1,16 @@
+---
+# tasks file for mastodon-clone
+- name: Clone Latest Mastodon
+  ansible.builtin.git:
+    repo: "https://github.com/mastodon/mastodon.git"
+    dest: "{{ mastodon_home }}/{{ mastodon_path }}"
+    clone: true
+- name: Checkout proper release as per official guide
+  ansible.builtin.shell: |
+    set -o pipefail
+    git checkout $(git tag -l | grep -v 'rc[0-9]*$' | sort -V | tail -n 1)
+  args:
+    executable: /bin/bash
+    chdir: "{{ mastodon_home }}/{{ mastodon_path }}"
+  register: checkout_mastodon
+  changed_when: checkout_mastodon.rc != 0

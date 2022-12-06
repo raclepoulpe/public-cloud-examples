@@ -1,0 +1,14 @@
+---
+# tasks file for mastodon-last-dependencies
+- name: Install bundler
+  ansible.builtin.shell: "gem install bundler --no-document"
+  args:
+    executable: /bin/bash
+  register: install_bundler
+  changed_when: install_bundler.rc != 0
+- name: Install Ruby dependencies
+  ansible.builtin.shell: "bundle config deployment 'true'"
+  args:
+    executable: /bin/bash
+  register: install_ruby_dependencies
+  changed_when: install_ruby_dependencies.rc != 0
