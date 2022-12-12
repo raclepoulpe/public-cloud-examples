@@ -3,6 +3,8 @@
   vars_files:
     - "group_vars/vars.yml"
   tasks:
+    - name: "Waiting for connection.."
+      ansible.builtin.wait_for_connection:
     - name: Run ubuntu-setup role
       ansible.builtin.include_role:
         name: ubuntu-setup

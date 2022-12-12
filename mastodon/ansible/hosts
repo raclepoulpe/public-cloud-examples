@@ -1,5 +1,0 @@
-all:
-    hosts:
-        mastodon_server:
-            ansible_host: 51.210.122.54
-            ansible_user: ubuntu
