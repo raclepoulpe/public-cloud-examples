@@ -4,6 +4,6 @@ variable "region" {
 }
 
 // Key to access instances
-variable "keypairAdmin_publickey" {
+variable "keypairAdmin" {
   type = string
 }

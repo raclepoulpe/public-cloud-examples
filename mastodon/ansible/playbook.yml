@@ -22,13 +22,6 @@
         apply:
           become: true
           become_user: mastodon
-    - name: Install Ruby environment
-      ansible.builtin.include_role:
-        name: ruby
-      args:
-        apply:
-          become: true
-          become_user: mastodon
     - name: Install last dependencies
       ansible.builtin.include_role:
         name: mastodon-last-dependencies
