@@ -5,6 +5,7 @@
   tasks:
     - name: "Waiting for connection.."
       ansible.builtin.wait_for_connection:
+        connect_timeout: 300
     - name: Run ubuntu-setup role
       ansible.builtin.include_role:
         name: ubuntu-setup

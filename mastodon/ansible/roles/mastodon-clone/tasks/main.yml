@@ -14,3 +14,10 @@
     chdir: "{{ mastodon_home }}/{{ mastodon_path }}"
   register: checkout_mastodon
   changed_when: checkout_mastodon.rc != 0
+- name: Update profile settings
+  ansible.builtin.blockinfile:
+    path: "~/.bashrc"
+    create: true
+    mode: u+rw
+    block: |
+      export GEM_HOME=$HOME/.gem

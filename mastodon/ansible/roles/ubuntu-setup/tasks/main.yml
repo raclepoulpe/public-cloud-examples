@@ -23,7 +23,7 @@
   ansible.builtin.package:
     name: "{{ packagesinit | map(attribute='package') }}"
     update_cache: false
-- name: Install Node 16
+- name: setup Node 16 repository
   become: true
   ansible.builtin.shell: |
     set -o pipefail
@@ -32,6 +32,16 @@
     executable: /bin/bash
   register: node_install
   changed_when: node_install.rc != 0
+- name: Setup Yarn repository
+  become: true
+  ansible.builtin.shell: |
+    set -o pipefail
+    curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
+    echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+  args:
+    executable: /bin/bash
+  register: yarn_install
+  changed_when: yarn_install.rc != 0
 - name: Add Postgresql repository information
   become: true
   ansible.builtin.shell: |
@@ -44,6 +54,6 @@
   ansible.builtin.package:
     name: "{{ packages | map(attribute='package') }}"
     update_cache: false
-- name: All done!
+- name: All packages installed!
   ansible.builtin.debug:
     msg: Packages have been successfully installed

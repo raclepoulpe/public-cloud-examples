@@ -18,6 +18,7 @@ packages:
   - package: "protobuf-compiler"
   - package: "pkg-config"
   - package: "nodejs"
+  - package: "yarn"
   - package: "gcc"
   - package: "autoconf"
   - package: "bison"
@@ -41,7 +42,10 @@ packages:
   - package: "libjemalloc-dev"
   - package: "acl"
   - package: "ruby"
-
+  - package: "ruby-dev"
+  - package: "ruby-bundler"
+  - package: "python3-psycopg2"
+  
 mastodon_user: "mastodon"
 mastodon_home: "/home/{{ mastodon_user }}"
 mastodon_path: "live"

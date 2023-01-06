@@ -1,13 +1,21 @@
 ---
 # tasks file for mastodon-last-dependencies
 - name: Install bundler
-  ansible.builtin.shell: "gem install bundler --no-document"
+  ansible.builtin.shell: |
+    export GEM_HOME=$HOME/.gem
+    gem install bundler --no-document
   args:
     executable: /bin/bash
   register: install_bundler
   changed_when: install_bundler.rc != 0
 - name: Install Ruby dependencies
-  ansible.builtin.shell: "bundle config deployment 'true'"
+  ansible.builtin.shell: |
+    export GEM_HOME=$HOME/.gem
+    cd "{{ mastodon_home }}/{{ mastodon_path }}"
+    bundle config deployment 'true'
+    bundle config without 'development test'
+    bundle install -j$(getconf _NPROCESSORS_ONLN)
+    yarn install --pure-lockfile
   args:
     executable: /bin/bash
   register: install_ruby_dependencies
