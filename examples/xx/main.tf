@@ -31,6 +31,15 @@ resource "local_file" "ansible_config" {
   file_permission = "0644"
 }
 
+# Ansible variables file
+resource "local_file" "ansible_vars" {
+  content = templatefile("./templates/all.tftpl", {
+    volume_device = openstack_compute_volume_attach_v2.attached.device
+  })
+  filename        = "${path.module}/apps/group_vars/all"
+  file_permission = "0644"
+}
+
 # Ansible Execution - Mongoshell Installation
 resource "null_resource" "ansible_exec" {
   depends_on = [local_file.ansible_config]

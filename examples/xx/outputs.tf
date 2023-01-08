@@ -1,4 +1,4 @@
-output "bs_device" {
-  description = "Block Storage Device"
-  value = openstack_compute_volume_attach_v2.attached.device
+output "instance_ip" {
+  description = "Instance public IP address"
+  value = module.instance.instance_private_ip
 }

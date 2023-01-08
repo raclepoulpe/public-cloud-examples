@@ -22,5 +22,5 @@
   ansible.posix.mount:
     path: /mnt/data
     src: /dev/sdb1
-    state: present
+    state: mounted
     fstype: ext4
