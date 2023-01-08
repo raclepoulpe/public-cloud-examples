@@ -1,0 +1,25 @@
+- name: Install openjdk-17-jre-headless
+  become: yes
+  ansible.builtin.apt:
+    name: openjdk-17-jre-headless
+    state: present
+    update_cache: yes
+- name: Create minecraft directory
+  ansible.builtin.file:
+    path: /mnt/data/minecraft
+    state: directory
+    mode: "0755"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+- name: Download {{ minecraft_server_jar_file_url }}
+  ansible.builtin.get_url:
+    url: "{{ minecraft_server_jar_file_url }}"
+    dest: /mnt/data/minecraft
+    mode: '0660'
+- name: Copy eula.txt
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/eula.txt"
+    dest: /mnt/data/minecraft/eula.txt
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: '0664'

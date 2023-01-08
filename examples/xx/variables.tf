@@ -24,7 +24,6 @@ variable "bs" {
   type = object({
     name   = string
     region = string
-    size   = string
   })
 }
 
@@ -40,5 +39,14 @@ variable "instance" {
     flavor       = string
     image        = string
     user         = string
+  })
+}
+
+# Minecraft Server
+
+variable "mc_server" {
+  description = "Minecraft Server"
+  type = object({
+    url = string
   })
 }

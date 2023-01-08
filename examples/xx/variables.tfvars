@@ -14,9 +14,8 @@ keypair = {
 # Block Storage
 
 bs = {
-  name   = "data"
+  name   = "pciex-xx-data"
   region = "GRA7"
-  size   = "100"
 }
 
 # Instance
@@ -29,4 +28,10 @@ instance = {
   flavor       = "b2-7"
   image        = "Ubuntu 20.04"
   user         = "ubuntu"
+}
+
+# Minecraft Server
+
+mc_server = {
+    url = "https://piston-data.mojang.com/v1/objects/c9df48efed58511cdd0213c56b9013a7b5c9ac1f/server.jar"
 }

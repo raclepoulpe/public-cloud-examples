@@ -8,19 +8,27 @@
 - name: Create a new ext4 primary partition
   become: yes
   community.general.parted:
-    device: /dev/sdb
+    device: "{{ volume_device }}"
     number: 1
     state: present
     fs_type: ext4
-- name: Create a ext4 filesystem on /dev/sdb1
+- name: Create a ext4 filesystem on {{ volume_device }}1
   become: yes
   community.general.filesystem:
     fstype: ext4
-    dev: /dev/sdb1
+    dev: "{{ volume_device }}1"
 - name: Mount volume on /mnt/data
   become: yes
   ansible.posix.mount:
     path: /mnt/data
-    src: /dev/sdb1
+    src: "{{ volume_device }}1"
     state: mounted
     fstype: ext4
+- name: Recursively change ownership of /mnt/data
+  become: yes
+  ansible.builtin.file:
+    path: /mnt/data
+    state: directory
+    recurse: yes
+    owner: "{{ user }}"
+    group: "{{ user }}"
